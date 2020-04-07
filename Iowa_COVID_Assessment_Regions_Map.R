@@ -25,17 +25,24 @@ ia_county <- subset(counties, region == "iowa")
 
 #Read in the file "IowaCountyNames.csv" before proceeding
 # region colors
-colors = read.csv("IowaCountyNames.csv") %>% mutate(subregion = as.character(subregion))
+colors = read.csv("IowaCountyNames_wRegions.csv") %>% mutate(subregion = as.character(subregion))
 
 #Join the colors by subregion to the spatial data
 ia_county = left_join(ia_county, colors)
 
-#Create a color pallette
-v_colors =  viridis::viridis(12)
+# # CREATE A MAP WITH THE REGIONS VARIOUS COLORS
+# #Create a color pallette for the regions
+# v_colors =  viridis::viridis(12)
+# #Assign each region a color, Region 1 = a, Region 2 = b, etc
+# my_colors= c("a"=v_colors[3], "b"=v_colors[4], "c" = v_colors[8], "d"=v_colors[6], "e" = v_colors[5], "f" = v_colors[7])
 
-#Assign each region a color 
-my_colors= c("a"=v_colors[8], "b"=v_colors[4], "c"=v_colors[7], "d" = v_colors[5],
-             "e"=v_colors[3], "f"=v_colors[6])
+
+#CREATE A MAP WITH THE COUNTY ASSESSED BY THREAT LEVEL
+#Create a color pallette based on assessment level - order of colors is level: 6, 7, 8, 9, 10
+ass_col = c("#db861c", "#db4c1c", "#990000", "#7a2077", "#4d0b23")
+#Assign each region a color
+my_colors= c("a"=ass_col[3], "b"=ass_col[2], "c"=ass_col[1], "d" = ass_col[1],
+             "e"=ass_col[4], "f"=ass_col[3])
 
 #Aggregate the county names and find the county centroid
 cnames <- aggregate(cbind(long, lat) ~ subregion, data=ia_county, 
